@@ -968,15 +968,17 @@ static CDVUIInAppBrowser* instance = nil;
     if (_userAgentLockToken != 0) {
         [self.webView loadRequest:request];
     } else {
+        __weak CDVUIInAppBrowserViewController* weakSelf = self;
         [CDVUserAgentUtil acquireLock:^(NSInteger lockToken) {
             _userAgentLockToken = lockToken;
             [CDVUserAgentUtil setUserAgent:_userAgent lockToken:lockToken];
-            [self.webView loadRequest:request];
+            [weakSelf.webView loadRequest:request];
         }];
     }
  }
- - (void)navigateToNew:(NSURL*)url headers:(NSString*)headers
- {
+
+- (void)navigateToNew:(NSURL*)url headers:(NSString*)headers
+{
     NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:url];
     NSArray* pairs = [headers componentsSeparatedByString:@","];
  
